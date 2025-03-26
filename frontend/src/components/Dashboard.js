@@ -8,9 +8,10 @@ const Dashboard = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/check-session', {
+        const response = await axios.get('http://localhost:3000/api/check-session', {
           withCredentials: true,
         });
+        console.log('Check-session response:', response.data);
         if (response.data.message === 'User is logged in') {
           setUser(response.data.user);
         } else {
@@ -18,6 +19,7 @@ const Dashboard = () => {
           window.location.href = '/login';
         }
       } catch (error) {
+        console.error('Check-session error:', error);
         setMessage('Error checking session');
         window.location.href = '/login';
       }
@@ -51,16 +53,8 @@ const Dashboard = () => {
 };
 
 const styles = {
-  container: {
-    textAlign: 'center',
-    padding: '50px',
-  },
-  button: {
-    margin: '10px',
-    padding: '10px 20px',
-    fontSize: '16px',
-    cursor: 'pointer',
-  },
+  container: { textAlign: 'center', padding: '50px' },
+  button: { margin: '10px', padding: '10px 20px', fontSize: '16px', cursor: 'pointer' },
 };
 
 export default Dashboard;
