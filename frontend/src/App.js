@@ -1,26 +1,23 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-// import Home from './components/Home';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Dashboard from './pages/Dashboard';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/Dashboard';
+import CalorieCounter from './pages/CalorieCounter';
 
-function App() {
+const App = () => {
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/mini-apps/calorie" element={<CalorieCounter />} />
+        {/* Placeholder routes for other mini-apps */}
+        <Route path="/mini-apps/finance" element={<div>Finance Mini-App (Placeholder)</div>} />
+        <Route path="/mini-apps/todo" element={<div>To-Do Mini-App (Placeholder)</div>} />
+        <Route path="/mini-apps/diary" element={<div>Diary Mini-App (Placeholder)</div>} />
+      </Routes>
     </Router>
   );
-}
+};
 
 export default App;

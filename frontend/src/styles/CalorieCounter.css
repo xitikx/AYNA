@@ -1,0 +1,266 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.calorie-counter {
+  font-family: 'Arial', sans-serif;
+  background: #f5f7fa;
+  padding: 20px;
+  min-height: 100vh;
+  color: #333;
+}
+
+/* Header */
+.calorie-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.calorie-header h1 {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.total-today {
+  background: #e8ecef;
+  padding: 15px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.total-today h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #2c3e50;
+}
+
+/* Main Content */
+.calorie-main {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column; /* Stack rows vertically */
+  gap: 30px; /* Space between rows */
+}
+
+/* First Row: Cards */
+.calorie-cards {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  justify-content: space-between;
+  gap: 20px; /* Space between cards */
+}
+
+.calorie-form-section,
+.calorie-list-section {
+  flex: 1;
+  min-width: 300px; /* Ensures cards don’t get too narrow */
+  padding: 20px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Section */
+.calorie-form-section h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.calorie-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-size: 1rem;
+  color: #555;
+}
+
+.form-group input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #3498db;
+}
+
+.add-btn {
+  padding: 12px;
+  background: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.add-btn:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+/* List Section */
+.calorie-list-section h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.calorie-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.calorie-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.calorie-entry:hover {
+  transform: translateY(-3px);
+}
+
+.entry-details p {
+  margin: 5px 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.entry-details p strong {
+  color: #2c3e50;
+}
+
+.delete-btn {
+  padding: 8px 15px;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+  transform: translateY(-2px);
+}
+
+/* Second Row: Chart */
+.calorie-trend-section {
+  padding: 20px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.calorie-trend-section h3 {
+  margin-bottom: 15px;
+  font-size: 1.5em;
+  color: #2c3e50;
+}
+
+.calorie-trend-section canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Message */
+.message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #e74c3c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .calorie-cards {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .calorie-form-section,
+  .calorie-list-section {
+    padding: 15px;
+  }
+
+  .calorie-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .total-today h2 {
+    font-size: 1.3rem;
+  }
+
+  .calorie-form-section h3,
+  .calorie-list-section h3 {
+    font-size: 1.2rem;
+  }
+
+  .calorie-entry {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .delete-btn {
+    padding: 8px 20px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .calorie-cards {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .calorie-form-section,
+  .calorie-list-section {
+    max-width: 100%;
+  }
+}
+
+.calorie-trend-section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.calorie-trend-section h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}

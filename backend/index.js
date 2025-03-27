@@ -9,7 +9,7 @@ require('dotenv').config();
 
 // Models
 const User = require('./models/User');
-
+const DailyCalorieTotal = require('./models/DailyCalorieTotal');
 // Routes
 const calorieRoutes = require('./routes/calorieRoutes');
 const todoRoutes = require('./routes/todoRoutes');

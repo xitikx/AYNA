@@ -56,14 +56,14 @@ const Dashboard = () => {
   };
 
   const openMiniApp = (appName) => {
-    const miniAppWindows = {
-      Finance: '/mini-apps/finance.html',
-      Calorie: '/mini-apps/calorie.html',
-      'To-Do': '/mini-apps/todo.html',
-      Diary: '/mini-apps/diary.html',
+    const miniAppRoutes = {
+      Finance: '/mini-apps/finance',
+      Calorie: '/mini-apps/calorie',
+      'To-Do': '/mini-apps/todo',
+      Diary: '/mini-apps/diary',
     };
-    const url = miniAppWindows[appName];
-    window.open(url, appName, 'width=900,height=700,scrollbars=yes,resizable=yes');
+    const url = miniAppRoutes[appName];
+    window.open(url, '_blank'); // Open the route in a new tab
   };
 
   const miniApps = [
