@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [diaryCount, setDiaryCount] = useState(0);
   const [todoCount, setTodoCount] = useState(0);
   const [calorieToday, setCalorieToday] = useState(0);
+  const [subscriptionsCount, setSubscriptionsCount] = useState(0);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -31,16 +32,19 @@ const Dashboard = () => {
 
   const fetchSummaries = async () => {
     try {
-      const [diaryRes, todoRes, calorieRes] = await Promise.all([
+      const [diaryRes, todoRes, calorieRes, subscriptionsRes] = await Promise.all([
+        axios.get('http://localhost:3000/api/subscriptions', { withCredentials: true }),
         axios.get('http://localhost:3000/api/diary', { withCredentials: true }),
         axios.get('http://localhost:3000/api/todos?completed=false', { withCredentials: true }),
         axios.get(`http://localhost:3000/api/calories?date=${new Date().toISOString().split('T')[0]}`, {
           withCredentials: true,
         }),
       ]);
+      setSubscriptionsCount(subscriptionsRes.data.data.length);
       setDiaryCount(diaryRes.data.data.length);
       setTodoCount(todoRes.data.data.length);
       setCalorieToday(calorieRes.data.data.reduce((sum, entry) => sum + entry.calories, 0));
+
     } catch (error) {
       console.error('Error fetching summaries:', error);
     }
@@ -61,6 +65,7 @@ const Dashboard = () => {
       Calorie: '/mini-apps/calorie',
       'To-Do': '/mini-apps/todo',
       Diary: '/mini-apps/diary',
+      Subscriptions: '/mini-apps/subscriptions',
     };
     const url = miniAppRoutes[appName];
     window.open(url, '_blank'); // Open the route in a new tab
@@ -71,6 +76,7 @@ const Dashboard = () => {
     { name: 'Calorie', summary: `Today: ${calorieToday} kcal`, icon: 'fa-apple-alt' },
     { name: 'To-Do', summary: `Pending: ${todoCount}`, icon: 'fa-check-square' },
     { name: 'Diary', summary: `Entries: ${diaryCount}`, icon: 'fa-book' },
+    { name: 'Subscriptions', summary: `Entries: ${subscriptionsCount}`, icon: 'fa-book' },
   ];
 
   if (!user) return <div className="loading">Loading...</div>;

@@ -10,10 +10,14 @@ require('dotenv').config();
 // Models
 const User = require('./models/User');
 const DailyCalorieTotal = require('./models/DailyCalorieTotal');
+const Transaction = require('./models/Transaction');
+const RecurringTransaction = require('./models/RecurringTransaction');
 // Routes
 const calorieRoutes = require('./routes/calorieRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const diaryRoutes = require('./routes/diaryRoutes');
+const financeRoutes = require('./routes/financeRoutes'); // Add finance routes
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
 
 const app = express();
 
@@ -65,7 +69,10 @@ passport.use(new GoogleStrategy({
         googleId: profile.id,
         email: profile.emails && profile.emails[0] ? profile.emails[0].value : null,
         name: profile.displayName || null,
-        username: profile.emails && profile.emails[0] ? profile.emails[0].value : profile.id, // Fallback to googleId
+        username: profile.emails && profile.emails[0] ? profile.emails[0].value : profile.id,
+        balance: 0, // Initialize financial fields
+        totalSavings: 0,
+        totalInvestments: 0,
       });
       await user.save();
       console.log('New user created:', user);
@@ -128,7 +135,9 @@ app.get('/api/check-session', (req, res) => {
 
 app.use('/api/calories', calorieRoutes);
 app.use('/api/todos', todoRoutes);
-app.use('/api/diary', diaryRoutes)
+app.use('/api/diary', diaryRoutes);
+app.use('/api/finance', financeRoutes); // Add finance routes
+app.use('/api/subscriptions', subscriptionRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'AYNA backend is running' });
