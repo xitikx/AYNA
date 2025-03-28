@@ -10,6 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler
 } from 'chart.js';
 
 ChartJS.register(
@@ -19,7 +20,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 const CalorieTrendChart = ({ refresh }) => {
@@ -52,7 +54,7 @@ const CalorieTrendChart = ({ refresh }) => {
 
       while (currentDate <= endDate) {
         const dateStr = currentDate.toISOString().split('T')[0];
-        labels.push(dateStr);
+        labels.push(new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
         const dailyTotal = dailyTotals.find((entry) => entry.date === dateStr);
         data.push(dailyTotal ? dailyTotal.totalCalories : 0);
         currentDate.setDate(currentDate.getDate() + 1);
@@ -62,12 +64,19 @@ const CalorieTrendChart = ({ refresh }) => {
         labels,
         datasets: [
           {
-            label: 'Daily Calorie Intake (kcal)',
+            label: 'Calories',
             data,
-            borderColor: '#3498db',
-            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+            borderColor: '#6B5B95',
+            backgroundColor: 'rgba(178, 181, 224, 0.3)',
+            borderWidth: 3,
+            tension: 0.4,
             fill: true,
-            tension: 0.3,
+            pointBackgroundColor: '#FFFFFF',
+            pointBorderColor: '#6B5B95',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointHoverBorderWidth: 3,
           },
         ],
       });
@@ -81,51 +90,76 @@ const CalorieTrendChart = ({ refresh }) => {
 
   useEffect(() => {
     fetchCalorieTrend();
-  }, [refresh]); // Re-fetch when refresh prop changes
+  }, [refresh]);
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Calorie Intake Trend (Last 7 Days)',
+        display: false,
       },
       tooltip: {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        titleColor: '#6B5B95',
+        bodyColor: '#4A4458',
+        borderColor: '#B2B5E0',
+        borderWidth: 1,
+        padding: 12,
+        usePointStyle: true,
         callbacks: {
-          label: (context) => `${context.dataset.label}: ${context.parsed.y} kcal`,
+          label: (context) => `${context.parsed.y} kcal`,
+          title: (context) => context[0].label,
         },
       },
     },
     scales: {
       x: {
-        title: {
-          display: true,
-          text: 'Date',
+        grid: {
+          display: false,
+          drawBorder: false,
+        },
+        ticks: {
+          color: '#7A7A9D',
+          font: {
+            weight: 500,
+          },
         },
       },
       y: {
-        title: {
-          display: true,
-          text: 'Calories (kcal)',
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+          drawBorder: false,
         },
-        beginAtZero: true,
+        ticks: {
+          color: '#7A7A9D',
+          font: {
+            weight: 500,
+          },
+          callback: (value) => `${value} kcal`,
+        },
+      },
+    },
+    elements: {
+      line: {
+        borderJoinStyle: 'round',
+      },
+      point: {
+        hoverBorderColor: '#B2B5E0',
       },
     },
   };
 
   if (loading) {
-    return <div>Loading chart...</div>;
+    return <div className="chart-loading">Loading chart data...</div>;
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="chart-error">{error}</div>;
   }
 
   return (
-    <div className="calorie-trend-chart">
+    <div className="chart-container">
       <Line data={chartData} options={options} />
     </div>
   );
