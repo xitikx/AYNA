@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [todoCount, setTodoCount] = useState(0);
   const [calorieToday, setCalorieToday] = useState(0);
   const [subscriptionsCount, setSubscriptionsCount] = useState(0);
+  const [averageDailySpending, setAverageDailySpending] = useState(0);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -32,7 +33,7 @@ const Dashboard = () => {
 
   const fetchSummaries = async () => {
     try {
-      const [diaryRes, todoRes, calorieRes, subscriptionsRes] = await Promise.all([
+      const [subscriptionsRes, diaryRes, todoRes, calorieRes] = await Promise.all([
         axios.get('http://localhost:3000/api/subscriptions', { withCredentials: true }),
         axios.get('http://localhost:3000/api/diary', { withCredentials: true }),
         axios.get('http://localhost:3000/api/todos?completed=false', { withCredentials: true }),
@@ -40,11 +41,11 @@ const Dashboard = () => {
           withCredentials: true,
         }),
       ]);
-      setSubscriptionsCount(subscriptionsRes.data.data.length);
+      setSubscriptionsCount(subscriptionsRes.data.data.subscriptions.length); // Fixed response structure
+      setAverageDailySpending(subscriptionsRes.data.data.averageDailySpending); // Store average daily spending
       setDiaryCount(diaryRes.data.data.length);
       setTodoCount(todoRes.data.data.length);
       setCalorieToday(calorieRes.data.data.reduce((sum, entry) => sum + entry.calories, 0));
-
     } catch (error) {
       console.error('Error fetching summaries:', error);
     }
@@ -76,7 +77,7 @@ const Dashboard = () => {
     { name: 'Calorie', summary: `Today: ${calorieToday} kcal`, icon: 'fa-apple-alt' },
     { name: 'To-Do', summary: `Pending: ${todoCount}`, icon: 'fa-check-square' },
     { name: 'Diary', summary: `Entries: ${diaryCount}`, icon: 'fa-book' },
-    { name: 'Subscriptions', summary: `Entries: ${subscriptionsCount}`, icon: 'fa-book' },
+    { name: 'Subscriptions', summary: `Daily: ₹${parseFloat(averageDailySpending).toFixed(2)}`, icon: 'fa-credit-card' }, // Updated summary and icon
   ];
 
   if (!user) return <div className="loading">Loading...</div>;
