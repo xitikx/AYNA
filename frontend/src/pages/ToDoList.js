@@ -1,3 +1,4 @@
+// ToDoList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/ToDoList.css';
@@ -18,10 +19,9 @@ const ToDoList = () => {
   const fetchTodos = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/todos', { withCredentials: true });
-      const todoData = response.data.data || [];
-      setTodos(todoData);
+      setTodos(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching to-dos:', error.response ? error.response.data : error.message);
+      console.error('Error fetching to-dos:', error);
       setMessage('Failed to load to-do list.');
     }
   };
@@ -32,37 +32,24 @@ const ToDoList = () => {
       setMessage('Task cannot be empty.');
       return;
     }
-
     try {
-      const response = await axios.post(
-        'http://localhost:3000/api/todos',
-        { task, dueDate },
-        { withCredentials: true }
-      );
-      console.log('Add to-do response:', response.data);
-      setMessage('To-do added successfully!');
+      await axios.post('http://localhost:3000/api/todos', { task, dueDate }, { withCredentials: true });
+      setMessage('Task added successfully!');
       setTask('');
       setDueDate(new Date().toISOString().split('T')[0]);
       fetchTodos();
     } catch (error) {
-      console.error('Error adding to-do:', error.response ? error.response.data : error.message);
-      setMessage('Failed to add to-do: ' + (error.response ? error.response.data.message : error.message));
+      setMessage('Failed to add task.');
     }
   };
 
   const handleToggleComplete = async (id, currentStatus) => {
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/todos/${id}`,
-        { completed: !currentStatus },
-        { withCredentials: true }
-      );
-      console.log('Toggle complete response:', response.data);
-      setMessage('To-do updated!');
+      await axios.put(`http://localhost:3000/api/todos/${id}`, { completed: !currentStatus }, { withCredentials: true });
+      setMessage('Task updated!');
       fetchTodos();
     } catch (error) {
-      console.error('Error toggling to-do:', error.response ? error.response.data : error.message);
-      setMessage('Failed to update to-do: ' + (error.response ? error.response.data.message : error.message));
+      setMessage('Failed to update task.');
     }
   };
 
@@ -78,34 +65,25 @@ const ToDoList = () => {
       setMessage('Task cannot be empty.');
       return;
     }
-
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/todos/${editingId}`,
-        { task: editTask, dueDate: editDueDate },
-        { withCredentials: true }
-      );
-      console.log('Update to-do response:', response.data);
-      setMessage('To-do updated successfully!');
+      await axios.put(`http://localhost:3000/api/todos/${editingId}`, { task: editTask, dueDate: editDueDate }, { withCredentials: true });
+      setMessage('Task updated successfully!');
       setEditingId(null);
       setEditTask('');
       setEditDueDate('');
       fetchTodos();
     } catch (error) {
-      console.error('Error updating to-do:', error.response ? error.response.data : error.message);
-      setMessage('Failed to update to-do: ' + (error.response ? error.response.data.message : error.message));
+      setMessage('Failed to update task.');
     }
   };
 
   const handleDeleteTodo = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/api/todos/${id}`, { withCredentials: true });
-      console.log('Delete to-do response:', response.data);
-      setMessage('To-do deleted successfully!');
+      await axios.delete(`http://localhost:3000/api/todos/${id}`, { withCredentials: true });
+      setMessage('Task deleted successfully!');
       fetchTodos();
     } catch (error) {
-      console.error('Error deleting to-do:', error.response ? error.response.data : error.message);
-      setMessage('Failed to delete to-do: ' + (error.response ? error.response.data.message : error.message));
+      setMessage('Failed to delete task.');
     }
   };
 
@@ -116,7 +94,8 @@ const ToDoList = () => {
   };
 
   return (
-    <div className="todo-list">
+    <div className="todo-container">
+      <div className="todo-gradient"></div>
       <header className="todo-header">
         <h1>To-Do List</h1>
       </header>
@@ -124,26 +103,20 @@ const ToDoList = () => {
         <section className="todo-form-section">
           <h3>Add New Task</h3>
           <form onSubmit={handleAddTodo} className="todo-form">
-            <div className="form-group">
-              <label htmlFor="task">Task:</label>
-              <input
-                type="text"
-                id="task"
-                value={task}
-                onChange={(e) => setTask(e.target.value)}
-                placeholder="e.g., Finish homework"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="dueDate">Due Date:</label>
-              <input
-                type="date"
-                id="dueDate"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-              />
-            </div>
-            <button type="submit" className="add-btn">Add Task</button>
+            <input
+              type="text"
+              value={task}
+              onChange={(e) => setTask(e.target.value)}
+              placeholder="What’s on your mind?"
+              className="todo-input task-input"
+            />
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="todo-input date-input"
+            />
+            <button type="submit" className="todo-add-btn">+</button>
           </form>
         </section>
         <section className="todo-list-section">
@@ -153,20 +126,22 @@ const ToDoList = () => {
               {todos.map((todo) => (
                 <div key={todo._id} className={`todo-item ${isOverdue(todo.dueDate, todo.completed) ? 'overdue' : ''}`}>
                   {editingId === todo._id ? (
-                    <form onSubmit={handleUpdateTodo} className="edit-form">
+                    <form onSubmit={handleUpdateTodo} className="todo-edit-form">
                       <input
                         type="text"
                         value={editTask}
                         onChange={(e) => setEditTask(e.target.value)}
+                        className="todo-input task-input"
                         placeholder="Update task"
                       />
                       <input
                         type="date"
                         value={editDueDate}
                         onChange={(e) => setEditDueDate(e.target.value)}
+                        className="todo-input date-input"
                       />
-                      <button type="submit" className="save-btn">Save</button>
-                      <button type="button" className="cancel-btn" onClick={() => setEditingId(null)}>
+                      <button type="submit" className="todo-save-btn">Save</button>
+                      <button type="button" className="todo-cancel-btn" onClick={() => setEditingId(null)}>
                         Cancel
                       </button>
                     </form>
@@ -183,10 +158,10 @@ const ToDoList = () => {
                         {isOverdue(todo.dueDate, todo.completed) && <p className="overdue-text">Overdue</p>}
                       </div>
                       <div className="todo-actions">
-                        <button className="edit-btn" onClick={() => handleEditTodo(todo)}>
+                        <button className="todo-edit-btn" onClick={() => handleEditTodo(todo)}>
                           Edit
                         </button>
-                        <button className="delete-btn" onClick={() => handleDeleteTodo(todo._id)}>
+                        <button className="todo-delete-btn" onClick={() => handleDeleteTodo(todo._id)}>
                           Delete
                         </button>
                       </div>
@@ -200,7 +175,7 @@ const ToDoList = () => {
           )}
         </section>
       </main>
-      {message && <p className="message">{message}</p>}
+      {message && <p className={`todo-message ${message.includes('Failed') ? 'error' : ''}`}>{message}</p>}
     </div>
   );
 };

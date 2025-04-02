@@ -1,3 +1,4 @@
+// CalorieTrendChart.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
@@ -66,17 +67,18 @@ const CalorieTrendChart = ({ refresh }) => {
           {
             label: 'Calories',
             data,
-            borderColor: '#6B5B95',
-            backgroundColor: 'rgba(178, 181, 224, 0.3)',
+            borderColor: '#22c55e', // Green line
+            backgroundColor: 'rgba(34, 197, 94, 0.2)', // Light green fill
             borderWidth: 3,
             tension: 0.4,
             fill: true,
             pointBackgroundColor: '#FFFFFF',
-            pointBorderColor: '#6B5B95',
+            pointBorderColor: '#22c55e', // Green points
             pointBorderWidth: 2,
             pointRadius: 5,
             pointHoverRadius: 7,
             pointHoverBorderWidth: 3,
+            pointHoverBorderColor: '#16a34a', // Darker green on hover
           },
         ],
       });
@@ -101,9 +103,9 @@ const CalorieTrendChart = ({ refresh }) => {
       },
       tooltip: {
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        titleColor: '#6B5B95',
-        bodyColor: '#4A4458',
-        borderColor: '#B2B5E0',
+        titleColor: '#22c55e', // Green title in tooltip
+        bodyColor: '#1e293b', // Matches --dark from theme
+        borderColor: 'rgba(34, 197, 94, 0.3)',
         borderWidth: 1,
         padding: 12,
         usePointStyle: true,
@@ -120,7 +122,7 @@ const CalorieTrendChart = ({ refresh }) => {
           drawBorder: false,
         },
         ticks: {
-          color: '#7A7A9D',
+          color: '#94a3b8', // Matches --muted from theme
           font: {
             weight: 500,
           },
@@ -132,7 +134,7 @@ const CalorieTrendChart = ({ refresh }) => {
           drawBorder: false,
         },
         ticks: {
-          color: '#7A7A9D',
+          color: '#94a3b8', // Matches --muted from theme
           font: {
             weight: 500,
           },
@@ -145,21 +147,21 @@ const CalorieTrendChart = ({ refresh }) => {
         borderJoinStyle: 'round',
       },
       point: {
-        hoverBorderColor: '#B2B5E0',
+        hoverBorderColor: '#16a34a', // Darker green on hover
       },
     },
   };
 
   if (loading) {
-    return <div className="chart-loading">Loading chart data...</div>;
+    return <div className="calorie-chart-loading">Loading chart data...</div>;
   }
 
   if (error) {
-    return <div className="chart-error">{error}</div>;
+    return <div className="calorie-chart-error">{error}</div>;
   }
 
   return (
-    <div className="chart-container">
+    <div className="calorie-chart-container">
       <Line data={chartData} options={options} />
     </div>
   );

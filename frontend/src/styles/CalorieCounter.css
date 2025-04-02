@@ -1,17 +1,19 @@
-/* CalorieCounter.css - Enhanced UI with Premium Chart */
+/* CalorieCounter.css */
 :root {
-  --primary: #6B5B95;
-  --secondary: #B2B5E0;
-  --accent: #C5ADC5;
-  --light: #F8F9FF;
-  --text: #4A4458;
-  --text-light: #7A7A9D;
-  --success: #4CAF50;
-  --danger: #E53935;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
-  --glass: rgba(255, 255, 255, 0.95);
+  --primary: #4f46e5;
+  --primary-light: #6366f1;
+  --secondary: #10b981;
+  --accent: #ec4899;
+  --dark: #1e293b;
+  --light: #f8fafc;
+  --muted: #94a3b8;
+  --card-bg: rgba(255, 255, 255, 0.96);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --calorie-green: #22c55e; /* Pop of color for Calorie Counter */
+  --danger: #dc2626;
 }
 
 * {
@@ -20,182 +22,208 @@
   box-sizing: border-box;
 }
 
-.calorie-counter {
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #F8F9FF 0%, #E6E9FF 100%);
-  padding: 2.5rem;
-  min-height: 100vh;
-  color: var(--text);
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--light);
+  color: var(--dark);
+  line-height: 1.5;
+  overflow-x: hidden;
 }
 
-/* Header - Enhanced */
+/* Container */
+.calorie-container {
+  min-height: 100vh;
+  padding: 2rem;
+  position: relative;
+}
+
+/* Gradient Background */
+.calorie-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(79, 70, 229, 0.1),
+    rgba(16, 185, 129, 0.1),
+    rgba(236, 72, 153, 0.1),
+    rgba(79, 70, 229, 0.1)
+  );
+  animation: gradientFlow 20s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* Header */
 .calorie-header {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
   text-align: center;
-  margin-bottom: 3rem;
-  background: var(--glass);
-  padding: 1.8rem;
-  border-radius: 20px;
-  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: var(--transition);
 }
 
 .calorie-header:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
 .calorie-header h1 {
-  font-size: 2.3rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 1rem;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--calorie-green));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  letter-spacing: -0.5px;
+  margin-bottom: 1rem;
 }
 
-.total-today {
-  background: linear-gradient(135deg, var(--accent), var(--secondary));
-  padding: 1rem 2.2rem;
-  border-radius: 16px;
+.calorie-total-today {
+  background: linear-gradient(135deg, var(--calorie-green), var(--secondary));
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
   display: inline-block;
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
-.total-today:hover {
-  transform: translateY(-2px);
+.calorie-total-today:hover {
+  transform: scale(1.05);
   box-shadow: var(--shadow-md);
 }
 
-.total-today h2 {
-  font-size: 1.7rem;
+.calorie-total-today h2 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
   font-weight: 600;
   color: white;
+  margin: 0;
 }
 
-/* Main Content - Enhanced */
+/* Main Content */
 .calorie-main {
   max-width: 1200px;
-  margin: 0 auto 3rem;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* Form Section - Enhanced */
+/* Form Section */
 .calorie-form-section {
-  background: var(--glass);
-  padding: 2.2rem;
-  border-radius: 22px;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  transition: all 0.3s ease;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: var(--transition);
 }
 
 .calorie-form-section:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
 .calorie-form-section h3 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 1.8rem;
+  color: var(--dark);
+  margin-bottom: 1rem;
   text-align: center;
 }
 
 .calorie-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
-.form-group {
+.calorie-form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
-.form-group label {
-  font-size: 1.05rem;
+.calorie-form-group label {
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--text);
+  color: var(--dark);
 }
 
-.form-group input {
-  padding: 0.9rem 1.2rem;
-  font-size: 1.05rem;
+.calorie-form-group input {
+  padding: 0.75rem;
+  font-size: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 14px;
+  border-radius: 0.5rem;
   outline: none;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   background: rgba(255, 255, 255, 0.9);
-  font-family: inherit;
 }
 
-.form-group input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(107, 91, 149, 0.2);
+.calorie-form-group input:focus {
+  border-color: var(--calorie-green);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
 }
 
-.add-btn {
-  padding: 1.1rem;
-  background: linear-gradient(90deg, var(--accent), var(--secondary));
+.calorie-add-btn {
+  padding: 0.75rem;
+  background: linear-gradient(135deg, var(--calorie-green), var(--secondary));
   color: white;
   border: none;
-  border-radius: 14px;
-  font-size: 1.1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   box-shadow: var(--shadow-sm);
-  margin-top: 0.5rem;
-  letter-spacing: 0.5px;
 }
 
-.add-btn:hover {
-  transform: translateY(-3px);
+.calorie-add-btn:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--secondary), var(--calorie-green));
 }
 
-/* List Section - Enhanced */
+/* List Section */
 .calorie-list-section {
-  background: var(--glass);
-  padding: 2.2rem;
-  border-radius: 22px;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  transition: all 0.3s ease;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: var(--transition);
 }
 
 .calorie-list-section:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
 .calorie-list-section h3 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 1.8rem;
+  color: var(--dark);
+  margin-bottom: 1rem;
   text-align: center;
 }
 
 .calorie-list {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .calorie-entry {
@@ -203,217 +231,180 @@
   justify-content: space-between;
   align-items: center;
   background: rgba(255, 255, 255, 0.9);
-  padding: 1.3rem 1.7rem;
-  border-radius: 16px;
+  padding: 1rem;
+  border-radius: 0.75rem;
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
-  border-left: 5px solid var(--accent);
+  transition: var(--transition);
+  border-left: 4px solid var(--calorie-green);
 }
 
 .calorie-entry:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
-
-.entry-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.entry-details p {
-  margin: 0;
-  font-size: 1.05rem;
-  color: var(--text);
-}
-
-.entry-details p strong {
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.entry-details p:nth-child(3) {
-  font-size: 0.95rem;
-  color: var(--text-light);
-}
-
-.delete-btn {
-  padding: 0.7rem 1.3rem;
-  background: var(--danger);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-sm);
-}
-
-.delete-btn:hover {
-  background: #c62828;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
-/* Chart Section - Premium Enhanced */
-.calorie-trend-section {
-  background: var(--glass);
-  padding: 2.5rem;
-  border-radius: 24px;
+.calorie-entry-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.calorie-entry-details p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.calorie-entry-details p strong {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.calorie-delete-btn {
+  padding: 0.5rem 1rem;
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
   box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.calorie-delete-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Trend Section */
+.calorie-trend-section {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   max-width: 1200px;
-  margin: 0 auto 3rem;
-  grid-column: 1 / -1;
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
+  margin: 0 auto;
+  transition: var(--transition);
 }
 
 .calorie-trend-section:hover {
-  box-shadow: var(--shadow-lg);
   transform: translateY(-3px);
-}
-
-.calorie-trend-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: linear-gradient(90deg, var(--accent), var(--secondary));
-  background-size: 200% 100%;
-  animation: shimmer 3s infinite linear;
-}
-
-@keyframes shimmer {
-  0% { background-position: 0% 0; }
-  100% { background-position: -200% 0; }
+  box-shadow: var(--shadow-lg);
 }
 
 .calorie-trend-section h3 {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 2rem;
+  color: var(--dark);
+  margin-bottom: 1rem;
   text-align: center;
-  position: relative;
-  z-index: 2;
 }
 
-.chart-container {
-  position: relative;
-  height: 400px;
+.calorie-chart-container {
+  height: 300px;
   width: 100%;
-  margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.7);
-  border-radius: 18px;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.05);
+  border-radius: 0.75rem;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
-.chart-loading,
-.chart-error {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-light);
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 18px;
-  height: 400px;
+.calorie-chart-loading,
+.calorie-chart-error {
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.chart-error {
-  color: var(--danger);
-}
-
-/* Message - Enhanced */
-.message {
-  text-align: center;
-  padding: 1.2rem;
-  border-radius: 14px;
+  font-size: 1rem;
   font-weight: 600;
-  max-width: 600px;
-  margin: 0 auto 2rem;
-  background: rgba(229, 57, 53, 0.1);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 0.75rem;
+}
+
+.calorie-chart-error {
   color: var(--danger);
-  box-shadow: var(--shadow-sm);
+}
+
+/* Message */
+.calorie-message {
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem auto;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border-radius: 0.75rem;
+  max-width: 400px;
+  font-weight: 600;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
   .calorie-main {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-  
-  .calorie-header {
-    padding: 1.5rem;
-  }
-  
-  .calorie-header h1 {
-    font-size: 2.1rem;
-  }
-  
-  .total-today h2 {
-    font-size: 1.5rem;
   }
 
-  .chart-container {
-    height: 350px;
+  .calorie-chart-container {
+    height: 250px;
   }
 }
 
 @media (max-width: 768px) {
-  .calorie-counter {
-    padding: 1.8rem;
+  .calorie-container {
+    padding: 1rem;
   }
-  
+
   .calorie-header {
-    margin-bottom: 2.5rem;
-    padding: 1.2rem;
+    padding: 1rem;
   }
-  
-  .calorie-header h1 {
-    font-size: 1.9rem;
-  }
-  
-  .total-today {
-    padding: 0.9rem 1.7rem;
-  }
-  
-  .total-today h2 {
-    font-size: 1.4rem;
-  }
-  
+
   .calorie-form-section,
   .calorie-list-section,
   .calorie-trend-section {
-    padding: 1.8rem;
-  }
-  
-  .calorie-entry {
-    flex-direction: column;
-    gap: 1.2rem;
-    text-align: center;
-    padding: 1.2rem;
-  }
-  
-  .delete-btn {
-    width: 100%;
-    padding: 0.9rem;
+    padding: 1rem;
   }
 
-  .chart-container {
-    height: 300px;
-    padding: 1rem;
+  .calorie-entry {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .calorie-delete-btn {
+    width: 100%;
+  }
+
+  .calorie-chart-container {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calorie-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .calorie-total-today h2 {
+    font-size: 1.25rem;
+  }
+
+  .calorie-form-section h3,
+  .calorie-LIST-section h3,
+  .calorie-trend-section h3 {
+    font-size: 1.25rem;
+  }
+
+  .calorie-form-group input {
+    padding: 0.6rem;
+  }
+
+  .calorie-add-btn {
+    padding: 0.6rem;
   }
 }
 
@@ -423,7 +414,7 @@
     max-width: 1400px;
   }
 
-  .chart-container {
-    height: 450px;
+  .calorie-chart-container {
+    height: 350px;
   }
 }

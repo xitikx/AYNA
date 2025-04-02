@@ -217,7 +217,7 @@ body {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--accent), var(--accent));
+  background: #FA5E55;
   color: white;
   border: none;
   border-radius: 2rem;
@@ -229,7 +229,7 @@ body {
 .dashboard-logout-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  background: linear-gradient(135deg, var(--accent), #f472b6);
+  background: linear-gradient(135deg, var(--accent), #FA5E55);
 }
 
 /* Message */

@@ -1,7 +1,8 @@
+// CalorieCounter.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/CalorieCounter.css';
-import CalorieTrendChart from '../components/CalorieTrendChart'; // Import the chart component
+import CalorieTrendChart from '../components/CalorieTrendChart';
 
 const CalorieCounter = () => {
   const [calories, setCalories] = useState([]);
@@ -90,10 +91,11 @@ const CalorieCounter = () => {
   const recentCalories = calories.slice(0, 5);
 
   return (
-    <div className="calorie-counter">
+    <div className="calorie-container">
+      <div className="calorie-gradient"></div>
       <header className="calorie-header">
         <h1>Calorie Counter</h1>
-        <div className="total-today">
+        <div className="calorie-total-today">
           <h2>Today's Total: {totalToday} kcal</h2>
         </div>
       </header>
@@ -101,7 +103,7 @@ const CalorieCounter = () => {
         <section className="calorie-form-section">
           <h3>Add New Entry</h3>
           <form onSubmit={handleAddCalorie} className="calorie-form">
-            <div className="form-group">
+            <div className="calorie-form-group">
               <label htmlFor="foodItem">Food Item:</label>
               <input
                 type="text"
@@ -111,7 +113,7 @@ const CalorieCounter = () => {
                 placeholder="e.g., Apple"
               />
             </div>
-            <div className="form-group">
+            <div className="calorie-form-group">
               <label htmlFor="calorieAmount">Calories (kcal):</label>
               <input
                 type="number"
@@ -121,7 +123,7 @@ const CalorieCounter = () => {
                 placeholder="e.g., 95"
               />
             </div>
-            <div className="form-group">
+            <div className="calorie-form-group">
               <label htmlFor="date">Date:</label>
               <input
                 type="date"
@@ -130,7 +132,7 @@ const CalorieCounter = () => {
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
-            <button type="submit" className="add-btn">Add Entry</button>
+            <button type="submit" className="calorie-add-btn">Add Entry</button>
           </form>
         </section>
         <section className="calorie-list-section">
@@ -139,13 +141,13 @@ const CalorieCounter = () => {
             <div className="calorie-list">
               {recentCalories.map((entry) => (
                 <div key={entry._id} className="calorie-entry">
-                  <div className="entry-details">
+                  <div className="calorie-entry-details">
                     <p><strong>{entry.food}</strong></p>
                     <p>{entry.calories} kcal</p>
                     <p>{new Date(entry.date).toISOString().split('T')[0]}</p>
                   </div>
                   <button
-                    className="delete-btn"
+                    className="calorie-delete-btn"
                     onClick={() => handleDeleteCalorie(entry._id)}
                   >
                     Delete
@@ -158,12 +160,11 @@ const CalorieCounter = () => {
           )}
         </section>
       </main>
-      {/* Add the Calorie Trend Chart below the main sections */}
       <section className="calorie-trend-section">
         <h3>Calorie Intake Trend</h3>
         <CalorieTrendChart />
       </section>
-      {message && <p className="message">{message}</p>}
+      {message && <p className="calorie-message">{message}</p>}
     </div>
   );
 };
