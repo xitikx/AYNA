@@ -7,6 +7,8 @@ import ToDoList from './pages/ToDoList';
 import Diary from './pages/Diary';
 import Finance from './pages/Finance';
 import SubscriptionManager from './components/SubscriptionManager';
+import Calendar from './pages/Calendar'; // Import Calendar
+
 const App = () => {
   return (
     <Router>
@@ -18,6 +20,7 @@ const App = () => {
         <Route path="/mini-apps/todo" element={<ToDoList />} />
         <Route path="/mini-apps/diary" element={<Diary />} />
         <Route path="/mini-apps/subscriptions" element={<SubscriptionManager />} />
+        <Route path="/mini-apps/calendar" element={<Calendar />} /> {/* Add Calendar route */}
       </Routes>
     </Router>
   );

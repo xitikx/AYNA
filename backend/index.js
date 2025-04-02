@@ -12,12 +12,14 @@ const User = require('./models/User');
 const DailyCalorieTotal = require('./models/DailyCalorieTotal');
 const Transaction = require('./models/Transaction');
 const RecurringTransaction = require('./models/RecurringTransaction');
+
 // Routes
 const calorieRoutes = require('./routes/calorieRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const diaryRoutes = require('./routes/diaryRoutes');
-const financeRoutes = require('./routes/financeRoutes'); // Add finance routes
+const financeRoutes = require('./routes/financeRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
+const eventRoutes = require('./routes/eventRoutes'); // Add event routes
 
 const app = express();
 
@@ -136,8 +138,9 @@ app.get('/api/check-session', (req, res) => {
 app.use('/api/calories', calorieRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/diary', diaryRoutes);
-app.use('/api/finance', financeRoutes); // Add finance routes
-app.use('/api/subscriptions', subscriptionRoutes)
+app.use('/api/finance', financeRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/events', eventRoutes); // Add event routes
 
 app.get('/', (req, res) => {
   res.json({ message: 'AYNA backend is running' });
