@@ -1,3 +1,4 @@
+// Dashboard.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/Dashboard.css";
@@ -17,9 +18,7 @@ const Dashboard = () => {
       try {
         const response = await axios.get(
           "http://localhost:3000/api/check-session",
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
         if (response.data.message === "User is logged in") {
           setUser(response.data.user);
@@ -52,9 +51,7 @@ const Dashboard = () => {
             `http://localhost:3000/api/calories?date=${
               new Date().toISOString().split("T")[0]
             }`,
-            {
-              withCredentials: true,
-            }
+            { withCredentials: true }
           ),
           axios.get("http://localhost:3000/api/events/upcoming", {
             withCredentials: true,
@@ -100,38 +97,38 @@ const Dashboard = () => {
   const miniApps = [
     {
       name: "Finance",
-      summary: "Total Spent: $150",
-      icon: "fa-wallet",
+      summary: `Daily Avg: ₹${parseFloat(averageDailySpending).toFixed(2)}`,
+      icon: "💰",
       color: "finance-color",
     },
     {
       name: "Calorie",
       summary: `Today: ${calorieToday} kcal`,
-      icon: "fa-apple-alt",
+      icon: "🍎",
       color: "calorie-color",
     },
     {
       name: "To-Do",
       summary: `Pending: ${todoCount}`,
-      icon: "fa-check-square",
+      icon: "✅",
       color: "todo-color",
     },
     {
       name: "Diary",
       summary: `Entries: ${diaryCount}`,
-      icon: "fa-book",
+      icon: "📝",
       color: "diary-color",
     },
     {
       name: "Subscriptions",
-      summary: `Daily: ₹${parseFloat(averageDailySpending).toFixed(2)}`,
-      icon: "fa-credit-card",
+      summary: `Active: ${subscriptionsCount}`,
+      icon: "💳",
       color: "subscriptions-color",
     },
     {
       name: "Calendar",
       summary: `Upcoming: ${upcomingEventsCount}`,
-      icon: "fa-calendar-alt",
+      icon: "📅",
       color: "calendar-color",
     },
   ];
@@ -140,41 +137,39 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-reflection"></div>
-      <header className="dashboard-topbar">
-        <div className="dashboard-topbar-content">
-          <h1 className="dashboard-greeting">
-            Welcome, {user.name || user.username.split("@")[0]}
+      <div className="dashboard-gradient"></div>
+      <header className="dashboard-header">
+        <div className="dashboard-header-content">
+          <h1 className="dashboard-title">
+            Hello, {user.name || user.username.split("@")[0]}!
           </h1>
-          <button className="dashboard-exit-btn" onClick={handleLogout}>
+          <button className="dashboard-logout-btn" onClick={handleLogout}>
             Logout
           </button>
         </div>
       </header>
-      <main className="dashboard-body">
-        <div className="dashboard-panel">
-          <div className="dashboard-tiles">
-            {miniApps.map((app) => (
-              <div key={app.name} className={`dashboard-tile ${app.color}`}>
-                <div className="dashboard-tile-icon">
-                  <i className={`fas ${app.icon}`}></i>
-                </div>
-                <div className="dashboard-tile-info">
-                  <h2>{app.name}</h2>
-                  <p>{app.summary}</p>
-                  <button
-                    className="dashboard-open-btn"
-                    onClick={() => openMiniApp(app.name)}
-                  >
-                    Launch
-                  </button>
-                </div>
+      <main className="dashboard-main">
+        <section className="dashboard-grid">
+          {miniApps.map((app) => (
+            <div key={app.name} className={`dashboard-card ${app.color}`}>
+              <div className="dashboard-card-icon">
+                <span>{app.icon}</span>
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="dashboard-card-content">
+                <h2 className="dashboard-card-title">{app.name}</h2>
+                <p className="dashboard-card-summary">{app.summary}</p>
+                <button
+                  className="dashboard-card-btn"
+                  onClick={() => openMiniApp(app.name)}
+                >
+                  Open
+                </button>
+              </div>
+            </div>
+          ))}
+        </section>
       </main>
-      {message && <p className="dashboard-alert">{message}</p>}
+      {message && <div className="dashboard-message">{message}</div>}
     </div>
   );
 };
