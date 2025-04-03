@@ -82,10 +82,7 @@ body {
 .calorie-header h1 {
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--calorie-green));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--calorie-green); /* Solid green (#22c55e) */
   margin-bottom: 1rem;
 }
 
@@ -394,7 +391,7 @@ body {
   }
 
   .calorie-form-section h3,
-  .calorie-LIST-section h3,
+  .calorie-list-section h3,
   .calorie-trend-section h3 {
     font-size: 1.25rem;
   }

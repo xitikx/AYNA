@@ -4,17 +4,9 @@ import '../styles/Finance.css';
 
 const Finance = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(0); // Renamed to "Income" in UI
   const [totalSavings, setTotalSavings] = useState(0);
   const [totalInvestments, setTotalInvestments] = useState(0);
-  const [summary, setSummary] = useState({
-    totalIncome: 0,
-    totalExpenses: 0,
-    totalSavings: 0,
-    totalInvestments: 0,
-    netSavings: 0,
-    categories: {},
-  });
   const [transactions, setTransactions] = useState([]);
   const [recurringTransactions, setRecurringTransactions] = useState([]);
   const [categories, setCategories] = useState({});
@@ -38,12 +30,10 @@ const Finance = () => {
   const [editTransaction, setEditTransaction] = useState(null);
   const [editRecurringTransaction, setEditRecurringTransaction] = useState(null);
 
-  // Fetch initial data
   useEffect(() => {
     fetchCategories();
     fetchTransactions();
     fetchRecurringTransactions();
-    fetchSummary();
   }, []);
 
   const fetchCategories = async () => {
@@ -60,7 +50,7 @@ const Finance = () => {
       const query = new URLSearchParams(filters).toString();
       const response = await axios.get(`http://localhost:3000/api/finance?${query}`, { withCredentials: true });
       setTransactions(response.data.data.transactions);
-      setBalance(response.data.data.balance);
+      setBalance(response.data.data.balance); // Represents Income
       setTotalSavings(response.data.data.totalSavings);
       setTotalInvestments(response.data.data.totalInvestments);
     } catch (error) {
@@ -77,17 +67,6 @@ const Finance = () => {
     }
   };
 
-  const fetchSummary = async () => {
-    try {
-      const query = new URLSearchParams({ startDate: filters.startDate, endDate: filters.endDate }).toString();
-      const response = await axios.get(`http://localhost:3000/api/finance/summary?${query}`, { withCredentials: true });
-      setSummary(response.data.data);
-    } catch (error) {
-      console.error('Error fetching summary:', error);
-    }
-  };
-
-  // Handle form submissions
   const handleAddTransaction = async (e) => {
     e.preventDefault();
     try {
@@ -100,7 +79,6 @@ const Finance = () => {
         date: new Date().toISOString().split('T')[0],
       });
       fetchTransactions();
-      fetchSummary();
     } catch (error) {
       console.error('Error adding transaction:', error);
       alert(error.response?.data?.message || 'Error adding transaction');
@@ -113,7 +91,6 @@ const Finance = () => {
       await axios.put(`http://localhost:3000/api/finance/${editTransaction._id}`, editTransaction, { withCredentials: true });
       setEditTransaction(null);
       fetchTransactions();
-      fetchSummary();
     } catch (error) {
       console.error('Error updating transaction:', error);
       alert(error.response?.data?.message || 'Error updating transaction');
@@ -125,7 +102,6 @@ const Finance = () => {
       try {
         await axios.delete(`http://localhost:3000/api/finance/${id}`, { withCredentials: true });
         fetchTransactions();
-        fetchSummary();
       } catch (error) {
         console.error('Error deleting transaction:', error);
       }
@@ -177,72 +153,50 @@ const Finance = () => {
 
   const applyFilters = () => {
     fetchTransactions();
-    fetchSummary();
   };
 
   return (
-    <div className="finance-container">
-      <h2>Finance Mini-App</h2>
-      <div className="tabs">
-        <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')}>
+    <div className="fin-container">
+      <div className="fin-gradient"></div>
+      <header className="fin-header">
+        <h2>Finance Manager</h2>
+      </header>
+      <div className="fin-tabs">
+        <button className={activeTab === 'overview' ? 'fin-tab-active' : 'fin-tab'} onClick={() => setActiveTab('overview')}>
           Overview
         </button>
-        <button className={activeTab === 'transactions' ? 'active' : ''} onClick={() => setActiveTab('transactions')}>
+        <button className={activeTab === 'transactions' ? 'fin-tab-active' : 'fin-tab'} onClick={() => setActiveTab('transactions')}>
           Transactions
         </button>
-        <button className={activeTab === 'recurring' ? 'active' : ''} onClick={() => setActiveTab('recurring')}>
+        <button className={activeTab === 'recurring' ? 'fin-tab-active' : 'fin-tab'} onClick={() => setActiveTab('recurring')}>
           Recurring Transactions
         </button>
       </div>
 
-      {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <div className="overview">
+        <div className="fin-overview">
           <h3>Financial Overview</h3>
-          <div className="summary-cards">
-            <div className="card">
-              <h4>Balance</h4>
+          <div className="fin-summary-cards">
+            <div className="fin-card">
+              <h4>Income</h4>
               <p>${balance.toFixed(2)}</p>
             </div>
-            <div className="card">
-              <h4>Total Savings</h4>
+            <div className="fin-card">
+              <h4>Savings</h4>
               <p>${totalSavings.toFixed(2)}</p>
             </div>
-            <div className="card">
-              <h4>Total Investments</h4>
+            <div className="fin-card">
+              <h4>Investments</h4>
               <p>${totalInvestments.toFixed(2)}</p>
             </div>
           </div>
-          <h3>Summary</h3>
-          <div className="summary-details">
-            <p><strong>Total Income:</strong> ${summary.totalIncome.toFixed(2)}</p>
-            <p><strong>Total Expenses:</strong> ${summary.totalExpenses.toFixed(2)}</p>
-            <p><strong>Total Savings:</strong> ${summary.totalSavings.toFixed(2)}</p>
-            <p><strong>Total Investments:</strong> ${summary.totalInvestments.toFixed(2)}</p>
-            <p><strong>Net Savings:</strong> ${summary.netSavings.toFixed(2)}</p>
-          </div>
-          <h3>Category Breakdown</h3>
-          {Object.keys(summary.categories).map((type) => (
-            <div key={type}>
-              <h4>{type.charAt(0).toUpperCase() + type.slice(1)}</h4>
-              <ul>
-                {Object.keys(summary.categories[type]).map((category) => (
-                  <li key={category}>
-                    {category}: ${summary.categories[type][category].toFixed(2)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
         </div>
       )}
 
-      {/* Transactions Tab */}
       {activeTab === 'transactions' && (
-        <div className="transactions">
+        <div className="fin-transactions">
           <h3>Transactions</h3>
-          {/* Add Transaction Form */}
-          <form onSubmit={handleAddTransaction} className="transaction-form">
+          <form onSubmit={handleAddTransaction} className="fin-transaction-form">
             <select
               value={newTransaction.type}
               onChange={(e) => setNewTransaction({ ...newTransaction, type: e.target.value, category: '' })}
@@ -279,11 +233,10 @@ const Finance = () => {
               value={newTransaction.date}
               onChange={(e) => setNewTransaction({ ...newTransaction, date: e.target.value })}
             />
-            <button type="submit">Add Transaction</button>
+            <button type="submit" className="fin-add-btn">Add Transaction</button>
           </form>
 
-          {/* Filters */}
-          <div className="filters">
+          <div className="fin-filters">
             <select
               value={filters.type}
               onChange={(e) => setFilters({ ...filters, type: e.target.value })}
@@ -304,13 +257,12 @@ const Finance = () => {
               value={filters.endDate}
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
             />
-            <button onClick={applyFilters}>Apply Filters</button>
+            <button onClick={applyFilters} className="fin-filter-btn">Apply Filters</button>
           </div>
 
-          {/* Transaction List */}
-          <div className="transaction-list">
+          <div className="fin-transaction-list">
             {transactions.map((transaction) => (
-              <div key={transaction._id} className="transaction-item">
+              <div key={transaction._id} className="fin-transaction-item">
                 <div>
                   <p><strong>Type:</strong> {transaction.type}</p>
                   <p><strong>Amount:</strong> ${transaction.amount.toFixed(2)}</p>
@@ -318,18 +270,17 @@ const Finance = () => {
                   <p><strong>Description:</strong> {transaction.description || 'N/A'}</p>
                   <p><strong>Date:</strong> {new Date(transaction.date).toLocaleDateString()}</p>
                 </div>
-                <div className="transaction-actions">
-                  <button onClick={() => setEditTransaction(transaction)}>Edit</button>
-                  <button onClick={() => handleDeleteTransaction(transaction._id)}>Delete</button>
+                <div className="fin-transaction-actions">
+                  <button className="fin-edit-btn" onClick={() => setEditTransaction(transaction)}>Edit</button>
+                  <button className="fin-delete-btn" onClick={() => handleDeleteTransaction(transaction._id)}>Delete</button>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Edit Transaction Modal */}
           {editTransaction && (
-            <div className="modal">
-              <div className="modal-content">
+            <div className="fin-modal">
+              <div className="fin-modal-content">
                 <h3>Edit Transaction</h3>
                 <form onSubmit={handleEditTransaction}>
                   <select
@@ -366,8 +317,8 @@ const Finance = () => {
                     value={new Date(editTransaction.date).toISOString().split('T')[0]}
                     onChange={(e) => setEditTransaction({ ...editTransaction, date: e.target.value })}
                   />
-                  <button type="submit">Update</button>
-                  <button type="button" onClick={() => setEditTransaction(null)}>Cancel</button>
+                  <button type="submit" className="fin-update-btn">Update</button>
+                  <button type="button" className="fin-cancel-btn" onClick={() => setEditTransaction(null)}>Cancel</button>
                 </form>
               </div>
             </div>
@@ -375,12 +326,10 @@ const Finance = () => {
         </div>
       )}
 
-      {/* Recurring Transactions Tab */}
       {activeTab === 'recurring' && (
-        <div className="recurring-transactions">
+        <div className="fin-recurring-transactions">
           <h3>Recurring Transactions</h3>
-          {/* Add Recurring Transaction Form */}
-          <form onSubmit={handleAddRecurringTransaction} className="recurring-transaction-form">
+          <form onSubmit={handleAddRecurringTransaction} className="fin-recurring-transaction-form">
             <select
               value={newRecurringTransaction.type}
               onChange={(e) => setNewRecurringTransaction({ ...newRecurringTransaction, type: e.target.value, category: '' })}
@@ -431,13 +380,12 @@ const Finance = () => {
               value={newRecurringTransaction.endDate}
               onChange={(e) => setNewRecurringTransaction({ ...newRecurringTransaction, endDate: e.target.value })}
             />
-            <button type="submit">Add Recurring Transaction</button>
+            <button type="submit" className="fin-add-btn">Add Recurring Transaction</button>
           </form>
 
-          {/* Recurring Transaction List */}
-          <div className="recurring-transaction-list">
+          <div className="fin-recurring-transaction-list">
             {recurringTransactions.map((rt) => (
-              <div key={rt._id} className="recurring-transaction-item">
+              <div key={rt._id} className="fin-recurring-transaction-item">
                 <div>
                   <p><strong>Type:</strong> {rt.type}</p>
                   <p><strong>Amount:</strong> ${rt.amount.toFixed(2)}</p>
@@ -447,18 +395,17 @@ const Finance = () => {
                   <p><strong>Start Date:</strong> {new Date(rt.startDate).toLocaleDateString()}</p>
                   <p><strong>End Date:</strong> {rt.endDate ? new Date(rt.endDate).toLocaleDateString() : 'N/A'}</p>
                 </div>
-                <div className="recurring-transaction-actions">
-                  <button onClick={() => setEditRecurringTransaction(rt)}>Edit</button>
-                  <button onClick={() => handleDeleteRecurringTransaction(rt._id)}>Delete</button>
+                <div className="fin-recurring-transaction-actions">
+                  <button className="fin-edit-btn" onClick={() => setEditRecurringTransaction(rt)}>Edit</button>
+                  <button className="fin-delete-btn" onClick={() => handleDeleteRecurringTransaction(rt._id)}>Delete</button>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Edit Recurring Transaction Modal */}
           {editRecurringTransaction && (
-            <div className="modal">
-              <div className="modal-content">
+            <div className="fin-modal">
+              <div className="fin-modal-content">
                 <h3>Edit Recurring Transaction</h3>
                 <form onSubmit={handleEditRecurringTransaction}>
                   <select
@@ -509,8 +456,8 @@ const Finance = () => {
                     value={editRecurringTransaction.endDate ? new Date(editRecurringTransaction.endDate).toISOString().split('T')[0] : ''}
                     onChange={(e) => setEditRecurringTransaction({ ...editRecurringTransaction, endDate: e.target.value })}
                   />
-                  <button type="submit">Update</button>
-                  <button type="button" onClick={() => setEditRecurringTransaction(null)}>Cancel</button>
+                  <button type="submit" className="fin-update-btn">Update</button>
+                  <button type="button" className="fin-cancel-btn" onClick={() => setEditRecurringTransaction(null)}>Cancel</button>
                 </form>
               </div>
             </div>

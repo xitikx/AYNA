@@ -13,9 +13,9 @@
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   /* Mini-app specific colors */
-  --finance-color: #f59e0b;
+  --finance-color: #9F5255;
   --calorie-color: #22c55e;
-  --todo-color: #eab308;
+  --todo-color: #fda403;
   --diary-color: #ec4899;
   --subscriptions-color: #14b8a6;
   --calendar-color: #8b5cf6;

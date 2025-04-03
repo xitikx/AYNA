@@ -1,3 +1,4 @@
+// Diary.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Diary.css';
@@ -28,10 +29,9 @@ const Diary = () => {
       if (params.toString()) url += `?${params.toString()}`;
 
       const response = await axios.get(url, { withCredentials: true });
-      const entryData = response.data.data || [];
-      setEntries(entryData);
+      setEntries(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching diary entries:', error.response ? error.response.data : error.message);
+      console.error('Error fetching diary entries:', error);
       setMessage('Failed to load diary entries.');
     }
   };
@@ -44,20 +44,18 @@ const Diary = () => {
     }
 
     try {
-      const response = await axios.post(
+      await axios.post(
         'http://localhost:3000/api/diary',
         { title, content, mood: mood || null },
         { withCredentials: true }
       );
-      console.log('Add diary entry response:', response.data);
       setMessage('Diary entry added successfully!');
       setTitle('');
       setContent('');
       setMood('');
       fetchEntries();
     } catch (error) {
-      console.error('Error adding diary entry:', error.response ? error.response.data : error.message);
-      setMessage('Failed to add diary entry: ' + (error.response ? error.response.data.message : error.message));
+      setMessage('Failed to add diary entry.');
     }
   };
 
@@ -76,12 +74,11 @@ const Diary = () => {
     }
 
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:3000/api/diary/${editingId}`,
         { title: editTitle, content: editContent, mood: editMood || null },
         { withCredentials: true }
       );
-      console.log('Update diary entry response:', response.data);
       setMessage('Diary entry updated successfully!');
       setEditingId(null);
       setEditTitle('');
@@ -89,20 +86,17 @@ const Diary = () => {
       setEditMood('');
       fetchEntries();
     } catch (error) {
-      console.error('Error updating diary entry:', error.response ? error.response.data : error.message);
-      setMessage('Failed to update diary entry: ' + (error.response ? error.response.data.message : error.message));
+      setMessage('Failed to update diary entry.');
     }
   };
 
   const handleDeleteEntry = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/api/diary/${id}`, { withCredentials: true });
-      console.log('Delete diary entry response:', response.data);
+      await axios.delete(`http://localhost:3000/api/diary/${id}`, { withCredentials: true });
       setMessage('Diary entry deleted successfully!');
       fetchEntries();
     } catch (error) {
-      console.error('Error deleting diary entry:', error.response ? error.response.data : error.message);
-      setMessage('Failed to delete diary entry: ' + (error.response ? error.response.data.message : error.message));
+      setMessage('Failed to delete diary entry.');
     }
   };
 
@@ -111,7 +105,6 @@ const Diary = () => {
     setFilterDate('');
   };
 
-  // Mood Tracker Grid Logic
   const getMoodForDay = (day) => {
     const dayStr = day.toISOString().split('T')[0];
     const entry = entries.find((e) => new Date(e.createdAt).toISOString().split('T')[0] === dayStr);
@@ -119,7 +112,7 @@ const Diary = () => {
   };
 
   const renderMoodGrid = () => {
-    const days = 30; // Show last 30 days
+    const days = 30;
     const today = new Date();
     const grid = [];
     const moodColors = {
@@ -128,7 +121,7 @@ const Diary = () => {
       neutral: '#95a5a6',
       excited: '#f39c12',
       angry: '#e74c3c',
-      null: '#ecf0f1', // No entry
+      null: '#ecf0f1',
     };
 
     for (let i = days - 1; i >= 0; i--) {
@@ -149,7 +142,8 @@ const Diary = () => {
   };
 
   return (
-    <div className="diary">
+    <div className="diary-container">
+      <div className="diary-gradient"></div>
       <header className="diary-header">
         <h1>Diary</h1>
       </header>
@@ -157,7 +151,7 @@ const Diary = () => {
         <section className="diary-form-section">
           <h3>Add New Entry</h3>
           <form onSubmit={handleAddEntry} className="diary-form">
-            <div className="form-group">
+            <div className="diary-form-group">
               <label htmlFor="title">Title:</label>
               <input
                 type="text"
@@ -167,7 +161,7 @@ const Diary = () => {
                 placeholder="e.g., A Great Day"
               />
             </div>
-            <div className="form-group">
+            <div className="diary-form-group">
               <label htmlFor="content">Content:</label>
               <textarea
                 id="content"
@@ -177,7 +171,7 @@ const Diary = () => {
                 rows="4"
               />
             </div>
-            <div className="form-group">
+            <div className="diary-form-group">
               <label htmlFor="mood">Mood:</label>
               <select id="mood" value={mood} onChange={(e) => setMood(e.target.value)}>
                 <option value="">None</option>
@@ -188,13 +182,13 @@ const Diary = () => {
                 <option value="angry">Angry</option>
               </select>
             </div>
-            <button type="submit" className="add-btn">Add Entry</button>
+            <button type="submit" className="diary-add-btn">Add Entry</button>
           </form>
         </section>
-        <section className="filter-section">
+        <section className="diary-filter-section">
           <h3>Filter Entries</h3>
-          <div className="filter-controls">
-            <div className="form-group">
+          <div className="diary-filter-controls">
+            <div className="diary-form-group">
               <label htmlFor="filterMood">Mood:</label>
               <select id="filterMood" value={filterMood} onChange={(e) => setFilterMood(e.target.value)}>
                 <option value="">All</option>
@@ -205,7 +199,7 @@ const Diary = () => {
                 <option value="angry">Angry</option>
               </select>
             </div>
-            <div className="form-group">
+            <div className="diary-form-group">
               <label htmlFor="filterDate">Date:</label>
               <input
                 type="date"
@@ -214,10 +208,10 @@ const Diary = () => {
                 onChange={(e) => setFilterDate(e.target.value)}
               />
             </div>
-            <button className="clear-btn" onClick={clearFilters}>Clear Filters</button>
+            <button className="diary-clear-btn" onClick={clearFilters}>Clear Filters</button>
           </div>
         </section>
-        <section className="mood-tracker-section">
+        <section className="diary-mood-section">
           <h3>Mood Tracker (Last 30 Days)</h3>
           <div className="mood-legend">
             <span className="legend-item"><span className="legend-square happy"></span> Happy</span>
@@ -238,34 +232,40 @@ const Diary = () => {
               {entries.map((entry) => (
                 <div key={entry._id} className="diary-entry">
                   {editingId === entry._id ? (
-                    <form onSubmit={handleUpdateEntry} className="edit-form">
-                      <input
-                        type="text"
-                        value={editTitle}
-                        onChange={(e) => setEditTitle(e.target.value)}
-                        placeholder="Update title"
-                      />
-                      <textarea
-                        value={editContent}
-                        onChange={(e) => setEditContent(e.target.value)}
-                        placeholder="Update content"
-                        rows="4"
-                      />
-                      <select value={editMood} onChange={(e) => setEditMood(e.target.value)}>
-                        <option value="">None</option>
-                        <option value="happy">Happy</option>
-                        <option value="sad">Sad</option>
-                        <option value="neutral">Neutral</option>
-                        <option value="excited">Excited</option>
-                        <option value="angry">Angry</option>
-                      </select>
-                      <button type="submit" className="save-btn">Save</button>
-                      <button type="button" className="cancel-btn" onClick={() => setEditingId(null)}>
+                    <form onSubmit={handleUpdateEntry} className="diary-edit-form">
+                      <div className="diary-form-group">
+                        <input
+                          type="text"
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          placeholder="Update title"
+                        />
+                      </div>
+                      <div className="diary-form-group">
+                        <textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          placeholder="Update content"
+                          rows="4"
+                        />
+                      </div>
+                      <div className="diary-form-group">
+                        <select value={editMood} onChange={(e) => setEditMood(e.target.value)}>
+                          <option value="">None</option>
+                          <option value="happy">Happy</option>
+                          <option value="sad">Sad</option>
+                          <option value="neutral">Neutral</option>
+                          <option value="excited">Excited</option>
+                          <option value="angry">Angry</option>
+                        </select>
+                      </div>
+                      <button type="submit" className="diary-save-btn">Save</button>
+                      <button type="button" className="diary-cancel-btn" onClick={() => setEditingId(null)}>
                         Cancel
                       </button>
                     </form>
                   ) : (
-                    <div className="entry-details">
+                    <div className="diary-entry-details">
                       <h4>{entry.title} ({new Date(entry.createdAt).toISOString().split('T')[0]})</h4>
                       {entry.mood && (
                         <p className={`mood-label mood-${entry.mood}`}>
@@ -273,11 +273,11 @@ const Diary = () => {
                         </p>
                       )}
                       <p>{entry.content}</p>
-                      <div className="entry-actions">
-                        <button className="edit-btn" onClick={() => handleEditEntry(entry)}>
+                      <div className="diary-entry-actions">
+                        <button className="diary-edit-btn" onClick={() => handleEditEntry(entry)}>
                           Edit
                         </button>
-                        <button className="delete-btn" onClick={() => handleDeleteEntry(entry._id)}>
+                        <button className="diary-delete-btn" onClick={() => handleDeleteEntry(entry._id)}>
                           Delete
                         </button>
                       </div>
@@ -291,7 +291,7 @@ const Diary = () => {
           )}
         </section>
       </main>
-      {message && <p className="message">{message}</p>}
+      {message && <p className={`diary-message ${message.includes('Failed') ? 'error' : ''}`}>{message}</p>}
     </div>
   );
 };

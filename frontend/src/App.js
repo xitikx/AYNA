@@ -6,7 +6,7 @@ import CalorieCounter from './pages/CalorieCounter';
 import ToDoList from './pages/ToDoList';
 import Diary from './pages/Diary';
 import Finance from './pages/Finance';
-import SubscriptionManager from './components/SubscriptionManager';
+import SubscriptionManager from './pages/SubscriptionManager';
 import Calendar from './pages/Calendar'; // Import Calendar
 
 const App = () => {

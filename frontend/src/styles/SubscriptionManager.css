@@ -1,156 +1,537 @@
-.subscription-manager {
-    padding: 20px;
-    max-width: 1000px;
-    margin: 0 auto;
+/* SubscriptionManager.css */
+:root {
+  --sub-primary: #4f46e5; /* Dark blue (kept for reference, not used in heading) */
+  --sub-primary-light: #6366f1;
+  --sub-accent: #14b8a6; /* Teal pop for Subscriptions */
+  --sub-accent-light: #5eead4; /* Lighter teal for hover */
+  --sub-dark: #1e293b; /* Near-black */
+  --sub-light: #f8fafc; /* Off-white */
+  --sub-muted: #94a3b8; /* Gray */
+  --sub-card-bg: rgba(255, 255, 255, 0.96);
+  --sub-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --sub-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --sub-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --sub-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --sub-danger: #dc2626; /* Red for negative */
+  --sub-border: #e5e7eb; /* Light gray for inputs */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--sub-light);
+  color: var(--sub-dark);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Container */
+.sub-manager {
+  min-height: 100vh;
+  padding: 2rem;
+  position: relative;
+}
+
+/* Gradient Background */
+.sub-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(79, 70, 229, 0.1),
+    rgba(20, 184, 166, 0.1), /* Matches #14b8a6 */
+    rgba(148, 163, 184, 0.1),
+    rgba(79, 70, 229, 0.1)
+  );
+  animation: subGradientFlow 20s ease infinite;
+  z-index: -1;
+}
+
+@keyframes subGradientFlow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* Header */
+.sub-header {
+  background: var(--sub-card-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--sub-shadow-md);
+  text-align: center;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: var(--sub-transition);
+}
+
+.sub-header:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sub-shadow-lg);
+}
+
+.sub-header h1 {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  /* Option 1: Solid Teal */
+  color: var(--sub-accent); /* #14b8a6 */
+  /* Option 2: Teal Gradient (uncomment to use instead) */
+  /* background: linear-gradient(135deg, var(--sub-accent), var(--sub-accent-light)); */
+  /* -webkit-background-clip: text; */
+  /* background-clip: text; */
+  /* color: transparent; */
+}
+
+/* Main Content */
+.sub-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Controls */
+.sub-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: var(--sub-card-bg);
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: var(--sub-shadow-md);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: var(--sub-transition);
+}
+
+.sub-controls:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sub-shadow-lg);
+}
+
+.sub-add-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--sub-accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--sub-transition);
+  box-shadow: var(--sub-shadow-sm);
+}
+
+.sub-add-btn:hover {
+  background: var(--sub-accent-light);
+  transform: translateY(-2px);
+  box-shadow: var(--sub-shadow-md);
+}
+
+.sub-daily-spending {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--sub-dark);
+}
+
+/* Subscription List */
+.sub-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.sub-item {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--sub-shadow-sm);
+  transition: var(--sub-transition);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.sub-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sub-shadow-md);
+}
+
+.sub-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--sub-accent); /* #14b8a6 */
+  transition: var(--sub-transition);
+}
+
+.sub-item:hover::before {
+  width: 8px;
+}
+
+.sub-details {
+  flex: 1;
+}
+
+.sub-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--sub-dark);
+  margin-bottom: 0.5rem;
+}
+
+.sub-cycle,
+.sub-price,
+.sub-start,
+.sub-next {
+  font-size: 0.9rem;
+  color: var(--sub-muted);
+  margin: 0.25rem 0;
+}
+
+.sub-price {
+  color: var(--sub-accent); /* #14b8a6 */
+  font-weight: 600;
+}
+
+.sub-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sub-edit-btn,
+.sub-cancel-btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--sub-transition);
+  box-shadow: var(--sub-shadow-sm);
+  min-width: 80px;
+  text-align: center;
+}
+
+.sub-edit-btn {
+  background: var(--sub-accent); /* #14b8a6 */
+  color: white;
+}
+
+.sub-edit-btn:hover {
+  background: var(--sub-accent-light);
+  transform: translateY(-2px);
+  box-shadow: var(--sub-shadow-md);
+}
+
+.sub-cancel-btn {
+  background: var(--sub-danger);
+  color: white;
+}
+
+.sub-cancel-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: var(--sub-shadow-md);
+}
+
+.sub-cancelled {
+  font-size: 0.9rem;
+  color: var(--sub-danger);
+  font-weight: 600;
+}
+
+.sub-empty {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 1rem;
+  color: var(--sub-muted);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: var(--sub-shadow-sm);
+}
+
+/* Modal */
+.sub-modal {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  max-width: 500px;
+  margin: 20vh auto;
+  box-shadow: var(--sub-shadow-lg);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(20, 184, 166, 0.2); /* #14b8a6 */
+}
+
+.sub-modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sub-modal-header h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--sub-dark);
+  margin: 0;
+}
+
+.sub-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--sub-muted);
+  cursor: pointer;
+  transition: var(--sub-transition);
+}
+
+.sub-modal-close:hover {
+  color: var(--sub-danger);
+  transform: scale(1.1);
+}
+
+/* Add/Edit Form */
+.sub-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sub-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.sub-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sub-form-field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sub-dark);
+}
+
+.sub-form-field input,
+.sub-form-field select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--sub-border);
+  border-radius: 8px;
+  outline: none;
+  transition: var(--sub-transition);
+  background: var(--sub-light);
+  color: var(--sub-dark);
+}
+
+.sub-form-field select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--sub-accent) 50%),
+                    linear-gradient(135deg, var(--sub-accent) 50%, transparent 50%);
+  background-position: calc(100% - 20px) center, calc(100% - 15px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.sub-form-field input:focus,
+.sub-form-field select:focus {
+  border-color: var(--sub-accent); /* #14b8a6 */
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+}
+
+.sub-form-field input::placeholder {
+  color: var(--sub-muted);
+}
+
+/* Cancel Content */
+.sub-cancel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sub-cancel-content p {
+  font-size: 1rem;
+  color: var(--sub-dark);
+}
+
+/* Modal Actions */
+.sub-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.sub-add-btn,
+.sub-update-btn,
+.sub-delete-btn,
+.sub-cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--sub-transition);
+  box-shadow: var(--sub-shadow-sm);
+}
+
+.sub-add-btn,
+.sub-update-btn {
+  background: var(--sub-accent); /* #14b8a6 */
+  color: white;
+}
+
+.sub-add-btn:hover,
+.sub-update-btn:hover {
+  background: var(--sub-accent-light);
+  transform: translateY(-2px);
+  box-shadow: var(--sub-shadow-md);
+}
+
+.sub-delete-btn,
+.sub-cancel-btn {
+  background: var(--sub-danger);
+  color: white;
+}
+
+.sub-delete-btn:hover,
+.sub-cancel-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: var(--sub-shadow-md);
+}
+
+/* Message */
+.sub-message {
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem auto;
+  background: rgba(20, 184, 166, 0.1); /* #14b8a6 */
+  color: var(--sub-accent);
+  border-radius: 0.75rem;
+  max-width: 400px;
+  font-weight: 600;
+}
+
+.sub-message.error {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--sub-danger);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sub-manager {
+    padding: 1rem;
   }
-  
-  .subscription-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+
+  .sub-controls {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
-  
-  .add-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+
+  .sub-list {
+    grid-template-columns: 1fr;
   }
-  
-  .add-button:hover {
-    background-color: #45a049;
+
+  .sub-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
-  
-  .daily-spending {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
+
+  .sub-form-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .subscription-table {
+
+  .sub-modal {
+    max-width: 90%;
+    margin: 10vh auto;
+    padding: 1rem;
+  }
+
+  .sub-modal-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .sub-add-btn,
+  .sub-update-btn,
+  .sub-delete-btn,
+  .sub-cancel-btn {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
   }
-  
-  .subscription-table th,
-  .subscription-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 480px) {
+  .sub-header h1 {
+    font-size: 1.5rem;
   }
-  
-  .subscription-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
+
+  .sub-modal-header h3 {
+    font-size: 1.5rem;
   }
-  
-  .subscription-table tr:hover {
-    background-color: #f9f9f9;
+
+  .sub-form-field label {
+    font-size: 0.85rem;
   }
-  
-  .edit-button {
-    background-color: #2196F3;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-right: 5px;
+
+  .sub-form-field input,
+  .sub-form-field select {
+    font-size: 0.9rem;
+    padding: 0.6rem;
   }
-  
-  .edit-button:hover {
-    background-color: #1e88e5;
+
+  .sub-add-btn,
+  .sub-update-btn,
+  .sub-delete-btn,
+  .sub-cancel-btn {
+    padding: 0.6rem;
   }
-  
-  .cancel-button {
-    background-color: #f44336;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+
+  .sub-name {
+    font-size: 1.1rem;
   }
-  
-  .cancel-button:hover {
-    background-color: #e53935;
+
+  .sub-cycle,
+  .sub-price,
+  .sub-start,
+  .sub-next {
+    font-size: 0.85rem;
   }
-  
-  /* Modal Styles */
-  .modal {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 500px;
-    margin: 50px auto;
-    position: relative;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modal-overlay {
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .modal-buttons button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .modal-buttons button:first-child {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .modal-buttons button:first-child:hover {
-    background-color: #45a049;
-  }
-  
-  .modal-buttons button:last-child {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .modal-buttons button:last-child:hover {
-    background-color: #e53935;
-  }
+}
