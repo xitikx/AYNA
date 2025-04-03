@@ -2,17 +2,6 @@
 
 Welcome to **AYNA**, a comprehensive personal management web application designed to help you organize your life with ease. Built with modern web technologies, AYNA integrates multiple mini-apps into a single platform, including a Calendar & Events manager, Calorie Tracker, To-Do List, Diary, Finance Tracker, and Subscription Manager. This project is ideal for users seeking a centralized solution for personal productivity and financial oversight.
 
-## Table of Contents
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Deployment](#deployment)
-- [Environment Variables](#environment-variables)
-- [API Endpoints](#api-endpoints)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
 
 ## Features
 - **Calendar & Events**: Manage events with customizable reminders, recurring options, and integration with subscription billing dates.
@@ -38,11 +27,4 @@ Welcome to **AYNA**, a comprehensive personal management web application designe
   - CORS
 - **Database**: MongoDB (local or MongoDB Atlas)
 
-## Installation
-
-### Prerequisites
-- Node.js (v18 or later)
-- npm or yarn
-- Git
-- MongoDB (local or MongoDB Atlas)
 
