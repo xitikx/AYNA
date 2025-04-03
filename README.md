@@ -1,4 +1,4 @@
-# AYNA - All-in-One Personal Management App
+# AYNA - All You Need App
 
 Welcome to **AYNA**, a comprehensive personal management web application designed to help you organize your life with ease. Built with modern web technologies, AYNA integrates multiple mini-apps into a single platform, including a Calendar & Events manager, Calorie Tracker, To-Do List, Diary, Finance Tracker, and Subscription Manager. This project is ideal for users seeking a centralized solution for personal productivity and financial oversight.
 
